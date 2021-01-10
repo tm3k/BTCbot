@@ -1,0 +1,2 @@
+APIkey = 'apikey'
+SecretKey = 'secretkey'
