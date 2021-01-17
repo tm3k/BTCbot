@@ -1,3 +1,4 @@
+# Confirmed working on python 3.7 + 3.8
 # pip install python-binance
 # pip install numpy
 # pip install finta
