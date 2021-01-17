@@ -1,3 +1,11 @@
+## 
+#
+# This program takes ohlc data of the btcusdt symbol from binance, puts it into a pandas dataframe, uses finta for the %B calculation,
+# adds that result to the dataframe in a new column, iterates over the last row every 30 seconds as it is in an infinite loop, and prints 'oversold' if the most recent 
+# 15 minute candle %b calculation is below 0, which in an uptrend, most of the time, lets you know a good entry to scalp long is now or coming soon.
+##
+
+
 from binance.client import Client
 from finta import TA
 from datetime import datetime, date
