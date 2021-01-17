@@ -1,5 +1,3 @@
-# https://medium.com/python-data/setting-up-a-bollinger-band-with-python-28941e2fa300
-
 from binance.client import Client
 from finta import TA
 from datetime import datetime, date
@@ -12,11 +10,7 @@ import datetime
 
 
 while True:
-    # Global Time
-    # current_datetime = datetime.datetime.now()
-    # current_datetime = current_datetime.strftime("%Y-%m-%d %H:%M PST | Binance Daily Candles\nScanning:\n")    
-    # print(current_datetime)
-
+    
     # Set up API
     api_key = creds.APIkey
     api_secret = creds.SecretKey
@@ -46,7 +40,7 @@ while True:
             #Code that converts unix timestamp to readable output
             timestamp = kline[0] #UTC time code
             timestamp = timestamp / 1000 #divides by 1000 because timestamp expects time in seconds but it comes in milliseconds and was giving the wrong date
-            timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
+            timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M')
             time_val.append(timestamp)
 
             #Adds ohlc values to lists
@@ -92,7 +86,7 @@ while True:
         
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
-        print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
+        #print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
         tickerx = df['Ticker']
         signal = df['Trade']
         datex = df['Date']
@@ -102,11 +96,10 @@ while True:
         
         try:
             if booly[99] == True:
-                print(f"${datex} - {tickerx[99]} - Oversold")
+                print(f"{datex[99]} - {tickerx[99]} - Oversold")
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(10)
-        #print(signal.tail(99))
+        t.sleep(30)
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -115,5 +108,3 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
-
-
