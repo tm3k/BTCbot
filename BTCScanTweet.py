@@ -1,3 +1,6 @@
+#
+# This is the same program  as BTCScan but tweets every 5 minutes if price is oversold
+#
 from binance.client import Client
 from finta import TA
 from datetime import datetime, date
