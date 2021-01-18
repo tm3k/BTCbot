@@ -1,10 +1,3 @@
-## 
-# This program takes ohlc data of the btcusdt symbol from binance, puts it into a pandas dataframe, uses finta for the %B calculation,
-# adds that result to the dataframe in a new column, iterates over the last row every 30 seconds as it is in an infinite loop, and prints 'oversold' if the most recent 
-# 15 minute candle %b calculation is below 0, which in an uptrend, most of the time, lets you know a good entry to scalp long is now or coming soon.
-##
-
-
 from binance.client import Client
 from finta import TA
 from datetime import datetime, date
@@ -103,10 +96,10 @@ while True:
         
         try:
             if booly[99] == True:
-                print(f"{datex[99]} - {tickerx[99]} - Oversold")
+                print(f"\n{datex[99]} - {tickerx[99]} - Oversold\n")
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(30)
+        t.sleep(300) #300 = 5 minutes
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -115,3 +108,7 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+
+
+
+
