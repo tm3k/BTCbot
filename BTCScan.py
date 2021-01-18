@@ -93,7 +93,7 @@ while True:
         
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
-        #print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
+        print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
         tickerx = df['Ticker']
         signal = df['Trade']
         datex = df['Date']
