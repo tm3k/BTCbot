@@ -7,14 +7,20 @@ import ticker_list2 # List of all tickers on binance.
 import pandas as pd
 import numpy as np
 import datetime
+import tweepy
 
 
 while True:
     
-    # Set up API
+    # Set up binance API
     api_key = creds.APIkey
     api_secret = creds.SecretKey
     client = Client(api_key, api_secret)
+
+    # Set up tweepy API
+    auth = tweepy.OAuthHandler(creds.consumer_key, creds.consumer_secret)
+    auth.set_access_token(creds.access_token, creds.access_token_secret)
+    api = tweepy.API(auth)
 
     # Gets all symbol tickers into a list. 
     tickers = client.get_orderbook_tickers() #All tickers and quotes
@@ -86,7 +92,7 @@ while True:
         
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
-        print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
+        #print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
         tickerx = df['Ticker']
         signal = df['Trade']
         datex = df['Date']
@@ -96,10 +102,12 @@ while True:
         
         try:
             if booly[99] == True:
-                print(f"\n{datex[99]} - {tickerx[99]} - Oversold\n")
+                tweet = f"\nBTCUSD - {price[99]} - Oversold\n"
+                print(tweet)
+                #api.update_status(tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(300) #300 = 5 minutes
+        t.sleep(200) #3.3 minutes wait
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -108,7 +116,3 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
-
-
-
-
