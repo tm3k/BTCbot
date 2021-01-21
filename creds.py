@@ -2,7 +2,7 @@
 APIkey = 'key'
 SecretKey = 'key'
 
-# for twitter
+#for twitter
 consumer_key = 'key'
 consumer_secret = 'key'
 access_token = 'key'
