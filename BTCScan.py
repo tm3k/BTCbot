@@ -9,7 +9,6 @@ import numpy as np
 import datetime
 import tweepy
 
-
 while True:
     
     # Set up binance API
@@ -39,7 +38,8 @@ while True:
         low_val = []
         close_val = []
         time_val = []                                                         #KLINE_INTERVAL_15MINUTE
-        ticker = []                                                           #KLINE_INTERVAL_1DAY
+        ticker = [] 
+        volume = []                                                             #KLINE_INTERVAL_1DAY
                                                                               #KLINE_INTERVAL_4HOUR
         for kline in client.get_historical_klines_generator(f"{stock}", Client.KLINE_INTERVAL_15MINUTE, "25 hours ago UTC"):
             
@@ -55,6 +55,7 @@ while True:
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
             ticker.append(stock)
+            volume.append(kline[5])
             
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
         zippedList = list(zip(open_val, high_val, low_val, close_val))
@@ -65,6 +66,12 @@ while True:
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
         df["%BB"] = bb #Adds %b value column to df
         trade_signal = [] 
+        
+        #Adds EMA column to df
+        ema = TA.EMA(df,20) 
+        df['EMA'] = pd.DataFrame(ema) 
+        firstema = df['EMA'][0]
+        lastema = df['EMA'][99]
 
         for i in bb:
                 try:
@@ -90,6 +97,9 @@ while True:
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
         
+        # Shows whole DB
+        print(df)
+
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
         #print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
@@ -106,8 +116,8 @@ while True:
                 print(tweet)
                 #api.update_status(tweet)
         except KeyError:
-            print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(200) #3.3 minutes wait
+            print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
+        t.sleep(300) #5 minutes wait
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -116,3 +126,7 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+
+
+
+
