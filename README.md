@@ -9,3 +9,5 @@
 # The type of trades it signals are often a high volatility scalp setup. 
 # I like to trade this by staying in position from 10 minutes to a couple hours, tops.
 # Code needs to be inverted to work in a downtrend, currently does not function properly in a downtrend.
+# Added an inverted version of the bot to run in downtrends
+# Currently trying to merge the code together to only signal buys or sells during certain trends, currently developing a strategy using the 20 period ema in conjunction with being above and below %b
