@@ -72,19 +72,30 @@ while True:
         df['EMA'] = pd.DataFrame(ema) 
         firstema = df['EMA'][0]
         lastema = df['EMA'][99]
+        trend = ['s']
+        df['Trend'] = pd.DataFrame(trend)
+        if lastema > firstema:
+            trend = ['Up']
+        elif firstema > lastema:
+            trend = ['Down']
+        df['Trend'] = pd.DataFrame(trend)
+        overall_trend = df['Trend'][0]
+        #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        
+        
 
         for i in bb:
-                try:
-                    if i == 0:
-                        trade_signal.append(''),              
-                    elif i > 1:
-                        trade_signal.append(''),               
-                    elif i < 0:
-                        trade_signal.append('Oversold'),    
-                    elif i <= 1 and i >= 0:
-                        trade_signal.append(''),
-                except KeyError:
-                    print(f"Incomplete data for {i}, KeyError.")
+            try:
+                if i == 0:
+                    trade_signal.append(''),              
+                elif i > 1:
+                    trade_signal.append(''),               
+                elif i < 0:
+                    trade_signal.append('Oversold'),    
+                elif i <= 1 and i >= 0:
+                    trade_signal.append(''),
+            except KeyError:
+                print(f"Incomplete data for {i}, KeyError.")
                 
         #Adds trade column to df
         df['Trade'] = pd.DataFrame(trade_signal)
@@ -98,11 +109,11 @@ while True:
         pd.set_option('display.max_rows', None)
         
         # Shows whole DB
-        print(df)
+        #print(df)
 
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
-        #print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
+        print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
         tickerx = df['Ticker']
         signal = df['Trade']
         datex = df['Date']
@@ -111,10 +122,10 @@ while True:
         booly = var.str.contains('Oversold')
         
         try:
-            if booly[99] == True:
+            if booly[99] == True and overall_trend == 'Up':
                 tweet = f"\nBTCUSD - {price[99]} - Oversold\n"
                 print(tweet)
-                #api.update_status(tweet)
+                api.update_status(tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
         t.sleep(300) #5 minutes wait
