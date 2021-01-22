@@ -82,8 +82,6 @@ while True:
         overall_trend = df['Trend'][0]
         #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
         
-        
-
         for i in bb:
             try:
                 if i == 0:
