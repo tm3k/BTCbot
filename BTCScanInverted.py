@@ -65,19 +65,27 @@ while True:
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
         df["%BB"] = bb #Adds %b value column to df
         trade_signal = [] 
+        
+        
+        #Adds EMA column to df
+        ema = TA.EMA(df,20) 
+        df['EMA'] = pd.DataFrame(ema) 
+        firstema = df['EMA'][0]
+        lastema = df['EMA'][99]
 
+        
         for i in bb:
-                try:
-                    if i == 0:
-                        trade_signal.append(''),              
-                    elif i > 1:
-                        trade_signal.append('Overbought'),               
-                    elif i < 0:
-                        trade_signal.append(''),    
-                    elif i <= 1 and i >= 0:
-                        trade_signal.append(''),
-                except KeyError:
-                    print(f"Incomplete data for {i}, KeyError.")
+            try:
+                if i == 0:
+                    trade_signal.append(''),              
+                elif i > 1:
+                    trade_signal.append('Overbought'),               
+                elif i < 0:
+                    trade_signal.append(''),    
+                elif i <= 1 and i >= 0:
+                    trade_signal.append(''),
+            except KeyError:
+                print(f"Incomplete data for {i}, KeyError.")
                 
         #Adds trade column to df
         df['Trade'] = pd.DataFrame(trade_signal)
@@ -89,6 +97,9 @@ while True:
         # Format for console, prints dataframe
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
+
+        # Shows DB
+        print(df)
         
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
@@ -107,7 +118,7 @@ while True:
                 #api.update_status(tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(200) #3.3 minute wait
+        t.sleep(300) #5 minute wait
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -116,3 +127,7 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+
+
+
+
