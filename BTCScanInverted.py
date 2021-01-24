@@ -146,7 +146,7 @@ while True:
     
     # Method to create plot
     def plot(df):
-        mpf.plot(df)
+        mpf.plot(df, type='candle')
 
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
