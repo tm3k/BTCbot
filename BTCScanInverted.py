@@ -10,7 +10,6 @@ import datetime
 import tweepy
 import mplfinance as mpf
 
-
 while True:
     
     # Set up binance API
@@ -72,7 +71,11 @@ while True:
         zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
         df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
         df2 = df2.set_index(['datetime'])
-
+        
+        # pandas df object containing bband values for plotting
+        bband = TA.BBANDS(df2) #pandas df object containing bband values
+        #print(bband)
+        
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
@@ -138,7 +141,9 @@ while True:
             if booly[99] == True and overall_trend == 'Down':
                 tweet = f"\nBTCUSD - {price[99]} - Overbought\n"
                 print(tweet)
-                api.update_status(tweet)
+                plot(df2)
+                picpath = 'upload.png'
+                api.update_with_media(picpath,tweet)
                 
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
@@ -146,7 +151,7 @@ while True:
     
     # Method to create plot
     def plot(df):
-        mpf.plot(df, type='candle')
+        mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = "BTCUSD 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
 
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
