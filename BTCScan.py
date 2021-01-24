@@ -10,7 +10,6 @@ import datetime
 import tweepy
 import mplfinance as mpf
 
-
 while True:
     
     # Set up binance API
@@ -40,10 +39,8 @@ while True:
         low_val = []
         close_val = []
         time_val = []                                                         #KLINE_INTERVAL_15MINUTE
-        ticker = []
-        pandasdti = []
-
-                                                                              #KLINE_INTERVAL_1DAY
+        ticker = [] 
+        pandasdti = []                                                            #KLINE_INTERVAL_1DAY
                                                                               #KLINE_INTERVAL_4HOUR
         for kline in client.get_historical_klines_generator(f"{stock}", Client.KLINE_INTERVAL_15MINUTE, "25 hours ago UTC"):
             
@@ -63,7 +60,8 @@ while True:
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
             ticker.append(stock)
-                
+        
+            
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
         zippedList = list(zip(open_val, high_val, low_val, close_val))
         df = pd.DataFrame(zippedList, columns = ['open' , 'high', 'low', 'close'])
@@ -72,7 +70,7 @@ while True:
         zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
         df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
         df2 = df2.set_index(['datetime'])
-
+        
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
@@ -93,15 +91,15 @@ while True:
         df['Trend'] = pd.DataFrame(trend)
         overall_trend = df['Trend'][0]
         #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
-
+        
         for i in bb:
             try:
                 if i == 0:
                     trade_signal.append(''),              
                 elif i > 1:
-                    trade_signal.append('Overbought'),               
+                    trade_signal.append(''),               
                 elif i < 0:
-                    trade_signal.append(''),    
+                    trade_signal.append('Oversold'),    
                 elif i <= 1 and i >= 0:
                     trade_signal.append(''),
             except KeyError:
@@ -117,10 +115,10 @@ while True:
         # Format for console, prints dataframe
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
-
-        # Shows DB
-        #print(df)
         
+        # Shows whole DB
+        #print(df)
+
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
         print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
@@ -129,25 +127,24 @@ while True:
         datex = df['Date']
         price = df['close']
         var = signal.tail(1)
-        booly = var.str.contains('Overbought')
-        
+        booly = var.str.contains('Oversold')
+
         #Test code plots chart
         plot(df2)
         
         try:
-            if booly[99] == True and overall_trend == 'Down':
-                tweet = f"\nBTCUSD - {price[99]} - Overbought\n"
+            if booly[99] == True and overall_trend == 'Up':
+                tweet = f"\nBTCUSD - {price[99]} - Oversold\n"
                 print(tweet)
                 api.update_status(tweet)
-                
         except KeyError:
-            print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(300) #5 minute wait
-    
+            print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
+        t.sleep(300) #5 minutes wait
+
     # Method to create plot
     def plot(df):
         mpf.plot(df)
-
+        
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
         for i in ticker_list2.ticker_list2:
@@ -155,4 +152,7 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+
+
+
 
