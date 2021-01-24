@@ -130,7 +130,7 @@ while True:
         booly = var.str.contains('Oversold')
 
         #Test code plots chart
-        plot(df2)
+        #plot(df2)
         
         try:
             if booly[99] == True and overall_trend == 'Up':
