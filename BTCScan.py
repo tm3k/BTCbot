@@ -136,14 +136,16 @@ while True:
             if booly[99] == True and overall_trend == 'Up':
                 tweet = f"\nBTCUSD - {price[99]} - Oversold\n"
                 print(tweet)
-                api.update_status(tweet)
+                plot(df2)
+                picpath = 'upload.png'
+                api.update_with_media(picpath,tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
         t.sleep(300) #5 minutes wait
 
     # Method to create plot
     def plot(df):
-        mpf.plot(df, type='candle')
+        mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = "BTCUSD 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -152,7 +154,3 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
-
-
-
-
