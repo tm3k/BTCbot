@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import tweepy
+import mplfinance as mpf
 
 
 while True:
@@ -39,7 +40,10 @@ while True:
         low_val = []
         close_val = []
         time_val = []                                                         #KLINE_INTERVAL_15MINUTE
-        ticker = []                                                           #KLINE_INTERVAL_1DAY
+        ticker = []
+        pandasdti = []
+
+                                                                              #KLINE_INTERVAL_1DAY
                                                                               #KLINE_INTERVAL_4HOUR
         for kline in client.get_historical_klines_generator(f"{stock}", Client.KLINE_INTERVAL_15MINUTE, "25 hours ago UTC"):
             
@@ -48,6 +52,10 @@ while True:
             timestamp = timestamp / 1000 #divides by 1000 because timestamp expects time in seconds but it comes in milliseconds and was giving the wrong date
             timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M')
             time_val.append(timestamp)
+            
+            ##converts unix time code to pandas DatetimeIndex object
+            datetimee = pd.to_datetime(timestamp) 
+            pandasdti.append(datetimee)
 
             #Adds ohlc values to lists
             open_val.append(float(kline[1]))
@@ -55,17 +63,21 @@ while True:
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
             ticker.append(stock)
-            
+                
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
         zippedList = list(zip(open_val, high_val, low_val, close_val))
         df = pd.DataFrame(zippedList, columns = ['open' , 'high', 'low', 'close'])
-        
+
+        # Creates second set of data for plotting it has to be formatted differently with a pandas datetimeindex object
+        zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
+        df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
+        df2 = df2.set_index(['datetime'])
+
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
         df["%BB"] = bb #Adds %b value column to df
         trade_signal = [] 
-        
         
         #Adds EMA column to df
         ema = TA.EMA(df,20) 
@@ -119,15 +131,23 @@ while True:
         var = signal.tail(1)
         booly = var.str.contains('Overbought')
         
+        #Test code plots chart
+        plot(df2)
+        
         try:
             if booly[99] == True and overall_trend == 'Down':
                 tweet = f"\nBTCUSD - {price[99]} - Overbought\n"
                 print(tweet)
                 api.update_status(tweet)
+                
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
         t.sleep(300) #5 minute wait
-        
+    
+    # Method to create plot
+    def plot(df):
+        mpf.plot(df)
+
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
         for i in ticker_list2.ticker_list2:
@@ -135,3 +155,4 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+
