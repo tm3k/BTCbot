@@ -11,3 +11,5 @@
 # Code needs to be inverted to work in a downtrend, currently does not function properly in a downtrend.
 # Added an inverted version of the bot to run in downtrends
 # Currently trying to merge the code together to only signal buys or sells during certain trends, currently developing a strategy using the 20 period ema in conjunction with being above and below %b
+# Added code that joins a trend following strategy with the %b strategy
+# Program takes the first ema and last ema and compares them, if the first ema is higher than the last one its a downtrend and vice versa.
