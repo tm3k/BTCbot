@@ -60,7 +60,6 @@ while True:
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
             ticker.append(stock)
-        
             
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
         zippedList = list(zip(open_val, high_val, low_val, close_val))
@@ -116,7 +115,7 @@ while True:
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
         
-        # Shows whole DB
+        #Shows whole DB
         #print(df)
 
         # Iterates through rows and looks for oversold tickers
@@ -141,8 +140,7 @@ while True:
                 api.update_with_media(picpath,tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
-        t.sleep(300) #5 minutes wait
-
+        
     # Method to create plot
     def plot(df):
         mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = "BTCUSD 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
@@ -154,3 +152,4 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+    t.sleep(300) #5 minutes wait
