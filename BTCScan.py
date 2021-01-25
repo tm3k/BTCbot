@@ -129,13 +129,13 @@ while True:
         booly = var.str.contains('Oversold')
 
         #Test code plots chart
-        #plot(df2)
+        #plot(df2,tickerx)
         
         try:
             if booly[99] == True and overall_trend == 'Up':
                 tweet = f"\n{tickerx} - {price[99]} - Oversold\n"
                 print(tweet)
-                plot(df2)
+                plot(df2,tickerx)
                 picpath = 'upload.png'
                 api.update_with_media(picpath,tweet)
         except KeyError:
@@ -143,8 +143,8 @@ while True:
         t.sleep(1)
         
     # Method to create plot
-    def plot(df):
-        mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = "BTCUSD 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
+    def plot(df,ticker):
+        mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
