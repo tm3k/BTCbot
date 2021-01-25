@@ -133,13 +133,14 @@ while True:
         
         try:
             if booly[99] == True and overall_trend == 'Up':
-                tweet = f"\nBTCUSD - {price[99]} - Oversold\n"
+                tweet = f"\n{tickerx} - {price[99]} - Oversold\n"
                 print(tweet)
                 plot(df2)
                 picpath = 'upload.png'
                 api.update_with_media(picpath,tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
+        t.sleep(1)
         
     # Method to create plot
     def plot(df):
