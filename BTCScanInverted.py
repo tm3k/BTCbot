@@ -147,7 +147,6 @@ while True:
                 
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
-        t.sleep(300) #5 minute wait
     
     # Method to create plot
     def plot(df):
@@ -160,4 +159,5 @@ while True:
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
+    t.sleep(300) #5 minute wait
 
