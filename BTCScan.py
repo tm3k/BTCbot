@@ -77,19 +77,23 @@ while True:
         trade_signal = [] 
         
         #Adds EMA column to df
-        ema = TA.EMA(df,20) 
-        df['EMA'] = pd.DataFrame(ema) 
-        firstema = df['EMA'][0]
-        lastema = df['EMA'][99]
-        trend = ['s']
-        df['Trend'] = pd.DataFrame(trend)
-        if lastema > firstema:
-            trend = ['Up']
-        elif firstema > lastema:
-            trend = ['Down']
-        df['Trend'] = pd.DataFrame(trend)
-        overall_trend = df['Trend'][0]
-        #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        try:
+            ema = TA.EMA(df,20) 
+            df['EMA'] = pd.DataFrame(ema) 
+            firstema = df['EMA'][0]
+            lastema = df['EMA'][99]
+            trend = ['s']
+            df['Trend'] = pd.DataFrame(trend)
+            if lastema > firstema:
+                trend = ['Up']
+            elif firstema > lastema:
+                trend = ['Down']
+            df['Trend'] = pd.DataFrame(trend)
+            overall_trend = df['Trend'][0]
+            #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        except ValueError:
+            print("ValueError. Re-trying.")
+            
         
         for i in bb:
             try:
@@ -97,12 +101,14 @@ while True:
                     trade_signal.append(''),              
                 elif i > 1:
                     trade_signal.append(''),               
-                elif i < 0:
+                elif i < -.05:
                     trade_signal.append('Oversold'),    
                 elif i <= 1 and i >= 0:
                     trade_signal.append(''),
             except KeyError:
                 print(f"Incomplete data for {i}, KeyError.")
+            except ValueError:
+                print("ValueError. Re-trying.")
                 
         #Adds trade column to df
         df['Trade'] = pd.DataFrame(trade_signal)
@@ -133,13 +139,15 @@ while True:
         
         try:
             if booly[99] == True and overall_trend == 'Up':
-                tweet = f"\n{tickerx} - {price[99]} - Oversold\n"
+                tweet = f"\n{tickerx[0]} - {price[99]} - Oversold\n"
                 print(tweet)
                 plot(df2,tickerx)
                 picpath = 'upload.png'
                 api.update_with_media(picpath,tweet)
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
+        except ValueError:
+            print("ValueError. Re-trying.")
         t.sleep(1)
         
     # Method to create plot
