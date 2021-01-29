@@ -11,7 +11,7 @@ import tweepy
 import mplfinance as mpf
 
 while True:
-    
+
     # Set up binance API
     api_key = creds.APIkey
     api_secret = creds.SecretKey
@@ -83,25 +83,28 @@ while True:
         trade_signal = [] 
         
         #Adds EMA column to df
-        ema = TA.EMA(df,20) 
-        df['EMA'] = pd.DataFrame(ema) 
-        firstema = df['EMA'][0]
-        lastema = df['EMA'][99]
-        trend = ['s']
-        df['Trend'] = pd.DataFrame(trend)
-        if lastema > firstema:
-            trend = ['Up']
-        elif firstema > lastema:
-            trend = ['Down']
-        df['Trend'] = pd.DataFrame(trend)
-        overall_trend = df['Trend'][0]
-        #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        try:
+            ema = TA.EMA(df,20) 
+            df['EMA'] = pd.DataFrame(ema) 
+            firstema = df['EMA'][0]
+            lastema = df['EMA'][99]
+            trend = ['s']
+            df['Trend'] = pd.DataFrame(trend)
+            if lastema > firstema:
+                trend = ['Up']
+            elif firstema > lastema:
+                trend = ['Down']
+            df['Trend'] = pd.DataFrame(trend)
+            overall_trend = df['Trend'][0]
+            #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        except ValueError:
+            print("ValueError. Re-trying.")
 
         for i in bb:
             try:
                 if i == 0:
                     trade_signal.append(''),              
-                elif i > 1:
+                elif i > 1.05:
                     trade_signal.append('Overbought'),               
                 elif i < 0:
                     trade_signal.append(''),    
@@ -109,6 +112,8 @@ while True:
                     trade_signal.append(''),
             except KeyError:
                 print(f"Incomplete data for {i}, KeyError.")
+            except ValueError:
+                print("ValueError. Re-trying.")
                 
         #Adds trade column to df
         df['Trade'] = pd.DataFrame(trade_signal)
@@ -139,7 +144,7 @@ while True:
         
         try:
             if booly[99] == True and overall_trend == 'Down':
-                tweet = f"\n{tickerx} - {price[99]} - Overbought\n"
+                tweet = f"\n{tickerx[0]} - {price[99]} - Overbought\n"
                 print(tweet)
                 plot(df2,tickerx)
                 picpath = 'upload.png'
@@ -147,8 +152,10 @@ while True:
                 
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
+        except ValueError:
+            print("ValueError. Re-trying.")
         t.sleep(1)
-    
+
     # Method to create plot
     def plot(df,ticker):
         mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
@@ -161,4 +168,3 @@ while True:
     #Method that starts the program
     feed_ticker(complete_ticker_list)
     t.sleep(300) #5 minute wait
-
