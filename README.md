@@ -16,6 +16,9 @@ I like to trade this by staying in position from 10 minutes to a couple hours, t
 Not all signals are trades, sometimes its just noise and its telling you to just pay attention. 
 If you have experience trading you will be able to filter the good signals manually.
 
+
+btc: 1CFk1d3yiHB9RNA6CW48PrbV3PNH4yGNST
+
 ltc: LgmDjpmPtYcDHeggFBEVdRYaJPivtSs9Et
 
 zec: t1YEdcpvg69hpETFFb3HAzyUuhhN5dy6dky
