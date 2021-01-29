@@ -1,8 +1,8 @@
 # BBot
 ## Example: https://twitter.com/__tm3k/status/1347570733887590401
-###pip install python-binance
-###pip install finta
-###pip install mplfinance
+### pip install python-binance
+### pip install finta
+### pip install mplfinance
 
 Get an api key from binance and put it into creds.
 Bot continuously scans btcusd 15minute chart and will alert you when price is overbought or oversold according to %b, then tweets it with a price chart. 
