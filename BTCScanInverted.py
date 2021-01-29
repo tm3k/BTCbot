@@ -74,7 +74,6 @@ while True:
         
         # pandas df object containing bband values for plotting
         bband = TA.BBANDS(df2) #pandas df object containing bband values
-        #print(bband)
         
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
@@ -126,9 +125,6 @@ while True:
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
 
-        # Shows DB
-        #print(df)
-        
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
         print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
@@ -139,9 +135,6 @@ while True:
         var = signal.tail(1)
         booly = var.str.contains('Overbought')
         
-        #Test code plots chart
-        plot(df2,tickerx)
-        
         try:
             if booly[99] == True and overall_trend == 'Down':
                 tweet = f"\n{tickerx[0]} - {price[99]} - Overbought\n"
@@ -149,7 +142,6 @@ while True:
                 plot(df2,tickerx)
                 picpath = 'upload.png'
                 api.update_with_media(picpath,tweet)
-                
         except KeyError:
             print(f"Incomplete data for {tickerx} KeyError at line 99")
         except ValueError:
