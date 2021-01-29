@@ -1,4 +1,4 @@
-# BBot_v1 https://twitter.com/__tm3k
+# BBot_v1: https://twitter.com/__tm3k
 ## Example: https://twitter.com/__tm3k/status/1347570733887590401
 
 
