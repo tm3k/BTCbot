@@ -90,11 +90,9 @@ while True:
                 trend = ['Down']
             df['Trend'] = pd.DataFrame(trend)
             overall_trend = df['Trend'][0]
-            #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
         except ValueError:
             print("ValueError. Re-trying.")
             
-        
         for i in bb:
             try:
                 if i == 0:
@@ -121,9 +119,6 @@ while True:
         pd.set_option('display.width', None)
         pd.set_option('display.max_rows', None)
         
-        #Shows whole DB
-        #print(df)
-
         # Iterates through rows and looks for oversold tickers
         tail = df.tail(1)
         print(f"{tail}\n") # Shows the last db row of each stock (last day of the 100 day period)
@@ -134,9 +129,6 @@ while True:
         var = signal.tail(1)
         booly = var.str.contains('Oversold')
 
-        #Test code plots chart
-        #plot(df2,tickerx)
-        
         try:
             if booly[99] == True and overall_trend == 'Up':
                 tweet = f"\n{tickerx[0]} - {price[99]} - Oversold\n"
