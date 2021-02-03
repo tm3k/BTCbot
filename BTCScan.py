@@ -156,5 +156,5 @@ try:
         #Method that starts the program
         feed_ticker(complete_ticker_list)
         t.sleep(180) #5 minutes wait
-except ConnectionError:
-    print("ConnectionError, retrying...")
+except:
+    print("Error, retrying...")
