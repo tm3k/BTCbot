@@ -92,8 +92,9 @@ try:
                 df['Trend'] = pd.DataFrame(trend)
                 overall_trend = df['Trend'][0]
                 print(f"15m Trend: {overall_trend}") # Prints the current trend direction
-            except ValueError:
-                print("ValueError. Re-trying.")
+            except:
+                print("Error line 96")
+                t.sleep(1)
                 
             for i in bb:
                 try:
@@ -105,10 +106,10 @@ try:
                         trade_signal.append('Oversold'),    
                     elif i <= 1 and i >= 0:
                         trade_signal.append(''),
-                except KeyError:
-                    print(f"Incomplete data for {i}, KeyError.")
-                except ValueError:
-                    print("ValueError. Re-trying.")
+                except:
+                    print("Error line 110")
+                    t.sleep(1)
+                
                     
             #Adds trade column to df
             df['Trade'] = pd.DataFrame(trade_signal)
@@ -130,6 +131,8 @@ try:
             price = df['close']
             var = signal.tail(1)
             booly = var.str.contains('Oversold')
+
+            
             
             try:
                 if booly[99] == True and overall_trend == 'Up':
@@ -138,15 +141,15 @@ try:
                     plot(df2,tickerx)
                     picpath = 'upload.png'
                     api.update_with_media(picpath,tweet)
-            except KeyError:
-                print(f"Incomplete data for {tickerx} KeyErrorzzz at line 99")
-            except ValueError:
-                print("ValueError. Re-trying.")
+            except:
+                print("Error line 143")
+                t.sleep(1)
+            
             t.sleep(1)
             
         # Method to create plot
         def plot(df,ticker):
-            mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y',savefig='upload.png')
+            mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', tight_layout=True, savefig='upload.png')
             
         # Method to feed ticker into main function
         def feed_ticker(complete_ticker_list2):
@@ -157,4 +160,5 @@ try:
         feed_ticker(complete_ticker_list)
         t.sleep(180) #5 minutes wait
 except:
-    print("Error, retrying...")
+    print("Error, retrying...(end of program)")
+    t.sleep(1)
