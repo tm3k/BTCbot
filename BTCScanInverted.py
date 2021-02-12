@@ -41,6 +41,7 @@ while True:
         time_val = []                                                         #KLINE_INTERVAL_15MINUTE
         ticker = []
         pandasdti = []
+        volume = []
 
                                                                               #KLINE_INTERVAL_1DAY
                                                                               #KLINE_INTERVAL_4HOUR
@@ -61,16 +62,18 @@ while True:
             high_val.append(float(kline[2]))
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
+            volume.append(float(kline[5]))
             ticker.append(stock)
                 
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
         zippedList = list(zip(open_val, high_val, low_val, close_val))
         df = pd.DataFrame(zippedList, columns = ['open' , 'high', 'low', 'close'])
-
+        
         # Creates second set of data for plotting it has to be formatted differently with a pandas datetimeindex object
         zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
-        df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
+        df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close',])
         df2 = df2.set_index(['datetime'])
+        df2['volume'] = volume 
         
         # pandas df object containing bband values for plotting
         bband = TA.BBANDS(df2) #pandas df object containing bband values
@@ -94,7 +97,7 @@ while True:
             trend = ['Down']
         df['Trend'] = pd.DataFrame(trend)
         overall_trend = df['Trend'][0]
-        print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
     
         for i in bb:
             
@@ -137,7 +140,7 @@ while True:
                 
     # Method to create plot
     def plot(df,ticker):
-        mpf.plot(df, type='candle',mav=(20),figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', tight_layout=True, savefig='upload.png')
+        mpf.plot(df2, type='candle', figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True)
 
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
@@ -147,3 +150,4 @@ while True:
     #Method that starts the program
     feed_ticker(complete_ticker_list)
     t.sleep(180) #5 minute wait
+
