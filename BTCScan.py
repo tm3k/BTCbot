@@ -74,6 +74,12 @@ while True:
         df2 = df2.set_index(['datetime'])
         df2['volume'] = volume
         
+        # pandas df object containing bband values for plotting and merges them into df2
+        bband = TA.BBANDS(df2) #pandas df object containing bband values
+        df2['BB_UPPER'] = bband['BB_UPPER'] 
+        df2['BB_MIDDLE'] = bband['BB_MIDDLE'] 
+        df2['BB_LOWER'] = bband['BB_LOWER'] 
+        
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
         bb = np.nan_to_num(bb) #replaces NaN values with 0.0 
@@ -95,7 +101,6 @@ while True:
         overall_trend = df['Trend'][0]
         #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
         
-            
         for i in bb:
             
             if i == 0:
@@ -139,7 +144,11 @@ while True:
     def plot(df,ticker):
         mc = mpf.make_marketcolors(up='w',down='b')
         s  = mpf.make_mpf_style(marketcolors=mc)
-        mpf.plot(df2, type='candle', figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='upload2.png', volume = True, style = s)
+        ap0 = [ mpf.make_addplot(df2['BB_UPPER'],color='b'),  # uses panel 0 by default
+                mpf.make_addplot(df2['BB_LOWER'],color='b'),
+                mpf.make_addplot(df2['BB_MIDDLE'],color='b'),  # uses panel 0 by default
+            ]
+        mpf.plot(df2, type='candle', axtitle = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='upload2.png', volume = True, style = s,addplot=ap0, fill_between=dict(y1=df2['BB_LOWER'].values, y2=df2['BB_UPPER'].values, alpha=0.15))
         
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
