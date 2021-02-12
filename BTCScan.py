@@ -41,7 +41,8 @@ while True:
         close_val = []
         time_val = []                                                         #KLINE_INTERVAL_15MINUTE
         ticker = [] 
-        pandasdti = []                                                            #KLINE_INTERVAL_1DAY
+        pandasdti = []
+        volume = []                                                            #KLINE_INTERVAL_1DAY
                                                                               #KLINE_INTERVAL_4HOUR
         for kline in client.get_historical_klines_generator(f"{stock}", Client.KLINE_INTERVAL_15MINUTE, "25 hours ago UTC"):
             
@@ -60,6 +61,7 @@ while True:
             high_val.append(float(kline[2]))
             low_val.append(float(kline[3]))
             close_val.append(float(kline[4]))
+            volume.append(float(kline[5]))
             ticker.append(stock)
             
         # Combines ohlc value lists into one object then creates a pandas dataframe with that data.
@@ -70,6 +72,7 @@ while True:
         zippedList2 = list(zip(pandasdti, open_val, high_val, low_val, close_val))
         df2 = pd.DataFrame(zippedList2, columns = ['datetime', 'open' , 'high', 'low', 'close'])
         df2 = df2.set_index(['datetime'])
+        df2['volume'] = volume
         
         # %B indicator added to DF
         bb = TA.PERCENT_B(df)
@@ -90,7 +93,7 @@ while True:
             trend = ['Down']
         df['Trend'] = pd.DataFrame(trend)
         overall_trend = df['Trend'][0]
-        print(f"15m Trend: {overall_trend}") # Prints the current trend direction
+        #print(f"15m Trend: {overall_trend}") # Prints the current trend direction
         
             
         for i in bb:
