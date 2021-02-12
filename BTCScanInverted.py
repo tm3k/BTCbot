@@ -140,12 +140,15 @@ while True:
                 
     # Method to create plot
     def plot(df,ticker):
-        mpf.plot(df2, type='candle', figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True)
+        mc = mpf.make_marketcolors(up='w',down='b')
+        s  = mpf.make_mpf_style(marketcolors=mc)
+        mpf.plot(df2, type='candle', figratio=(18,10), title = f"{ticker[0]} 15m", xrotation=20, datetime_format=' %A, %d-%m-%Y', savefig='upload.png', volume = True, style = s)
 
     # Method to feed ticker into main function
     def feed_ticker(complete_ticker_list2):
         for i in ticker_list2.ticker_list2:
              create_db(i)
+             t.sleep(2)
 
     #Method that starts the program
     feed_ticker(complete_ticker_list)
