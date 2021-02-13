@@ -141,7 +141,8 @@ while True:
             api.update_with_media(picpath,tweet)
         
     # Method to create plot
-    def plot(df,ticker):
+    def plot(df2,ticker):
+        # Creates BBands for plot
         mc = mpf.make_marketcolors(up='w',down='b')
         s  = mpf.make_mpf_style(marketcolors=mc)
         ap0 = [ mpf.make_addplot(df2['BB_UPPER'],color='b'),  # uses panel 0 by default
