@@ -1,2 +1,0 @@
-BTCScanInverted.py
-pause
