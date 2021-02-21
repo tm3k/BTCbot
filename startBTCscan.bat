@@ -1,2 +1,0 @@
-BTCScan.py
-pause
