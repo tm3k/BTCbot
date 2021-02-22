@@ -120,8 +120,8 @@ while True:
         booly = var.str.contains('Oversold')
     
 
-        if booly[71] == True and overall_trend == 'Up':
-            tweet = f"\n{tickerx[71]} - {price[71]} - Oversold\n"
+        if booly[71] == True:
+            tweet = f"\n1H {tickerx[71]} - {price[71]} - Oversold\n"
             print(tweet)
             plot(df2,tickerx)
             picpath = 'upload2.png'
